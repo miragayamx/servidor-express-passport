@@ -1,18 +1,13 @@
-const fs = require('fs');
 const path = require('path');
 const express = require('express');
 const multer = require('multer');
 const productos = require('./productos');
+const { createUploadsFolder, deleteFile } = require('./utils/fileManager');
 
 const router = express.Router();
 
 //Confirmo o creo el directorio donde se almacenaran las imagenes...
-(() => {
-	fs.promises.mkdir('./public/uploads').then(() => console.log('Directorio uploads creado!')).catch((err) => {
-		if (err.code === 'EEXIST') return console.log('Directorio uploads creado!');
-		console.log(err);
-	});
-})();
+createUploadsFolder();
 
 const getExtension = (fileType) => fileType.split('/')[1];
 const storage = multer.diskStorage({
@@ -67,7 +62,7 @@ router.put('/productos/actualizar/:id', productExists, upload.single('thumbnail'
 router.delete('/productos/borrar/:id', productExists, async (req, res) => {
 	try {
 		const { producto } = req;
-		if (producto.thumbnail.includes('uploads')) await fs.promises.unlink(`./public/${producto.thumbnail}`);
+		if (producto.thumbnail.includes('uploads')) await deleteFile(`./public/${producto.thumbnail}`);
 		productos.deleteProduct(req.params.id);
 		res.status(200).json(producto);
 	} catch (err) {

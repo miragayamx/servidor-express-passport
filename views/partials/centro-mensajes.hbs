@@ -1,0 +1,34 @@
+<h1 class="display-4 mb-3">Centro de mensajes</h1>
+<form id="chat-form">
+    <div class="row border-bottom mb-3">
+        <div class="col">
+            <div class="form-floating mb-3">
+                <input class="form-control" id="email" type="email" name="email" required="true" placeholder="E-mail" />
+                <label for="email">E-mail</label>
+            </div>
+        </div>
+    </div>
+    <div id="chat-messages">
+        <div class="row">
+            <div class="col">
+                <p class="text-success fst-normal">
+                    <span class="text-primary fw-bold">example@.com</span>
+                    <small class="text-secondary fw-normal">[fecha]</small>
+                    : Mensaje
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="form-floating mb-3">
+                <input class="form-control" id="message" type="text" name="message" required="true"
+                    placeholder="mensaje" />
+                <label for="message">Mensaje</label>
+            </div>
+        </div>
+        <div class="col">
+            <button type="submit" class="btn btn-primary mb-3">Enviar</button>
+        </div>
+    </div>
+</form>
