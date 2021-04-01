@@ -1,9 +1,12 @@
 # Canal de chat
 
->> Consigna: 
+>> Consigna:
+ 
 Añadiremos al proyecto un canal de chat (basado en websocket) entre el servidor y
 el cliente.
+
 >> Aspectos a incluir en el entregable:
+
 - En la parte inferior del formulario de ingreso se presentará el centro de mensajes
 almacenados en el servidor, donde figuren los mensajes de todos los usuarios identificados
 por su email.
