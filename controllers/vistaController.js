@@ -1,13 +1,13 @@
-const productos = require('../modelo/productos');
+const productos = require('../modelo/productosBD');
 
-const productosVista = (req, res) => {
-    const lista = productos.getList();
+const productosVista = async (req, res) => {
+    const lista = await productos.getProducts();
 	if (!lista.length) return res.render("productos-vista", {lista: lista, existe: false});
 	res.render("productos-vista", {lista: lista, existe: true})
 };
 
-const productosRegistrar = (req, res) => {
-	const lista = productos.getList();
+const productosRegistrar = async (req, res) => {
+	const lista = await productos.getProducts();
 	if (!lista.length) return res.render("ingreso-producto", {lista: lista, existe: false});
 	res.render("ingreso-producto", {lista: lista, existe: true});
 };
