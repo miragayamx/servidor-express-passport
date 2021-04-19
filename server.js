@@ -41,7 +41,7 @@ io.on("connection", (socket) => {
   //TABLA EN TIEMPO REAL
   socket.on("getUpdate", async () => {
     try {
-      const lista = productos.getProducts();
+      const lista = await productos.getProducts();
       io.emit("update", { existe: true, lista: lista });
     } catch (err) {
       io.emit("update", { existe: false, lista: lista });
@@ -78,11 +78,12 @@ io.on("connection", (socket) => {
   });
 });
 
-const server = http.listen(PORT, () => {
+const server = http.listen(PORT, async () => {
   console.log(
     `El servidor esta corriendo en el puerto: ${server.address().port}`
   );
-  createUploadsFolder();
+  await createUploadsFolder();
+  await productos.createTable();
 });
 
 server.on("error", (err) => console.log(`Error de servidor: ${err}`));

@@ -1,18 +1,24 @@
-const productos = require('../modelo/productosBD');
+const productos = require("../modelo/productosBD");
 
 const productosVista = async (req, res) => {
+  try {
     const lista = await productos.getProducts();
-	if (!lista.length) return res.render("productos-vista", {lista: lista, existe: false});
-	res.render("productos-vista", {lista: lista, existe: true})
+    res.render("productos-vista", { lista: lista, existe: true });
+  } catch (err) {
+    res.render("productos-vista", { lista: [], existe: false });
+  }
 };
 
 const productosRegistrar = async (req, res) => {
-	const lista = await productos.getProducts();
-	if (!lista.length) return res.render("ingreso-producto", {lista: lista, existe: false});
-	res.render("ingreso-producto", {lista: lista, existe: true});
+  try {
+    const lista = await productos.getProducts();
+    res.render("ingreso-producto", { lista: lista, existe: true });
+  } catch (err) {
+    res.render("ingreso-producto", { lista: [], existe: false });
+  }
 };
 
 module.exports = {
-    productosVista,
-    productosRegistrar
+  productosVista,
+  productosRegistrar,
 };

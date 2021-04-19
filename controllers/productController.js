@@ -12,7 +12,7 @@ const getAllProducts = async (req, res) => {
 };
 const getProduct = async (req, res) => {
   try {
-    const producto = await productos.getProduct(req.params.id)[0];
+    const producto = await productos.getProduct(req.params.id);
     res.status(200).json(producto);
   } catch (err) {
     res.status(400).json({ error: err.message });
@@ -34,7 +34,11 @@ const createProduct = async (req, res) => {
 //PUT
 const updateProduct = async (req, res) => {
   try {
-    if (!!req.file) req.body.thumbnail = "/uploads/" + req.file.filename;
+    if (!!req.file) {
+      req.body.thumbnail = "/uploads/" + req.file.filename;
+      const producto = await productos.getProduct(req.params.id);
+      await deleteFile(`./public/${producto.thumbnail}`);
+    }
     const updatedProduct = await productos.updateProduct(req.params.id, req.body);
     res.status(200).json(updatedProduct);
   } catch (err) {
@@ -44,7 +48,7 @@ const updateProduct = async (req, res) => {
 //DELETE
 const deleteProduct = async (req, res) => {
   try {
-    const producto = await productos.getProduct(req.params.id)[0];
+    const producto = await productos.getProduct(req.params.id);
     if (producto.thumbnail.includes("uploads"))
       await deleteFile(`./public/${producto.thumbnail}`);
     await productos.deleteProduct(req.params.id);

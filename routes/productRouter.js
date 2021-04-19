@@ -1,4 +1,3 @@
-const path = require('path');
 const express = require('express');
 const productControler = require('../controllers/productController');
 const upload = require('../middleware/multer');
