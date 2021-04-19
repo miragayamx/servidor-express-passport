@@ -4,11 +4,14 @@ const app = express();
 const http = require("http").Server(app);
 const io = require("socket.io")(http);
 const handlebars = require("express-handlebars");
+const { options } = require("./options/sqlLite");
+const knex = require("knex")(options);
 const productRouter = require("./routes/productRouter");
 const vistaRouter = require("./routes/vistaRouter");
 const productos = require("./modelo/productosBD");
 const {
   createUploadsFolder,
+  createDBLiteFolder,
   readFile,
   saveFile,
   appendFile,
@@ -48,29 +51,49 @@ io.on("connection", (socket) => {
     }
   });
   //CHAT
+  (async () => {
+    try {
+      await knex.schema.createTable("messages", function (table) {
+        table.increments("id");
+        table.string("text");
+        table.string("email");
+        table.datetime("date");
+      });
+      console.log("Base de datos SqlLite lista");
+    } catch (err) {
+      if (err.errno === 1) return console.log("Base de datos SqlLite lista");
+      console.log(err);
+    }
+  })()
   socket.on("getChatMessages", async () => {
     try {
-      const data = await readFile("./chat-message.txt");
-      const messages = JSON.parse(data);
+      // const data = await readFile("./chat-message.txt");
+      // const messages = JSON.parse(data);
+      
+      const messages = await knex.from('messages').select('*');
+      if(!messages.length) throw new Error('ENOENT');
       io.emit("messages", messages);
     } catch (err) {
-      if (err.code === "ENOENT")
+      if (err.message === "ENOENT")
         return io.emit("chatInfo", { info: "No se encontraron mensajes" });
       io.emit("chatInfo", { error: "No fue posible recuperar los mensajes" });
     }
   });
   socket.on("setNewChatMessages", async (message) => {
     try {
-      await appendFile("./chat-message.txt");
-      const data = await readFile("./chat-message.txt");
+      // await appendFile("./chat-message.txt");
+      // const data = await readFile("./chat-message.txt");
+      const data = await knex.from('messages').select('*');
       let messages = [];
-      if (!!data) messages = JSON.parse(data);
+      if(!!data.length) messages = data;
+      // if (!!data) messages = JSON.parse(data);
       const messageWithDate = {
         ...message,
         date: new Date().toLocaleString("es-AR"),
       };
+      const messageID = await knex("messages").insert(messageWithDate);
       messages.push(messageWithDate);
-      await saveFile("./chat-message.txt", JSON.stringify(messages));
+      // await saveFile("./chat-message.txt", JSON.stringify(messages));
       io.emit("messages", messages);
     } catch (err) {
       io.emit("chatInfo", { error: "No fue posible recuperar los mensajes" });
