@@ -1,7 +1,7 @@
 const options = {
 	client: 'sqlite3',
 	connection: {
-		filename: './DBLite/mibase.sqlite'
+		filename: './DBLite/chat-messages.sqlite'
 	},
 	useNullAsDefault: true
 };

@@ -40,7 +40,6 @@ app.use("/api", productRouter);
 
 //SOCKET
 io.on("connection", (socket) => {
-  console.log("Usuario conectado");
   //TABLA EN TIEMPO REAL
   socket.on("getUpdate", async () => {
     try {
@@ -52,24 +51,10 @@ io.on("connection", (socket) => {
   });
   //CHAT
   (async () => {
-    try {
-      await knex.schema.createTable("messages", function (table) {
-        table.increments("id");
-        table.string("text");
-        table.string("email");
-        table.datetime("date");
-      });
-      console.log("Base de datos SqlLite lista");
-    } catch (err) {
-      if (err.errno === 1) return console.log("Base de datos SqlLite lista");
-      console.log(err);
-    }
+    
   })()
   socket.on("getChatMessages", async () => {
     try {
-      // const data = await readFile("./chat-message.txt");
-      // const messages = JSON.parse(data);
-      
       const messages = await knex.from('messages').select('*');
       if(!messages.length) throw new Error('ENOENT');
       io.emit("messages", messages);
@@ -81,19 +66,15 @@ io.on("connection", (socket) => {
   });
   socket.on("setNewChatMessages", async (message) => {
     try {
-      // await appendFile("./chat-message.txt");
-      // const data = await readFile("./chat-message.txt");
       const data = await knex.from('messages').select('*');
       let messages = [];
       if(!!data.length) messages = data;
-      // if (!!data) messages = JSON.parse(data);
       const messageWithDate = {
         ...message,
         date: new Date().toLocaleString("es-AR"),
       };
-      const messageID = await knex("messages").insert(messageWithDate);
+      await knex("messages").insert(messageWithDate);
       messages.push(messageWithDate);
-      // await saveFile("./chat-message.txt", JSON.stringify(messages));
       io.emit("messages", messages);
     } catch (err) {
       io.emit("chatInfo", { error: "No fue posible recuperar los mensajes" });
@@ -102,11 +83,23 @@ io.on("connection", (socket) => {
 });
 
 const server = http.listen(PORT, async () => {
-  console.log(
-    `El servidor esta corriendo en el puerto: ${server.address().port}`
-  );
-  await createUploadsFolder();
-  await productos.createTable();
+  try {
+    console.log(
+      `El servidor esta corriendo en el puerto: ${server.address().port}`
+    );
+    await createUploadsFolder();
+    await productos.createTable();
+    await knex.schema.createTable("messages", function (table) {
+      table.increments("id");
+      table.string("text");
+      table.string("email");
+      table.datetime("date");
+    });
+    console.log("Base de datos SqlLite lista");
+  } catch (err) {
+    if (err.errno === 1) return console.log("Base de datos SqlLite lista");
+    console.log(err);
+  }
 });
 
 server.on("error", (err) => console.log(`Error de servidor: ${err}`));
