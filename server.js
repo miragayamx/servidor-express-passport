@@ -6,6 +6,7 @@ const io = require('socket.io')(http);
 const handlebars = require('express-handlebars');
 const productRouter = require('./routes/productRouter');
 const vistaRouter = require('./routes/vistaRouter');
+const Producto = require('./models/producto');
 const Mensaje = require('./models/mensaje');
 const { createUploadsFolder, createDBLiteFolder, readFile, saveFile, appendFile } = require('./utils/fileManager');
 require('./db/mongoose');
@@ -36,7 +37,8 @@ io.on('connection', (socket) => {
 	//TABLA EN TIEMPO REAL
 	socket.on('getUpdate', async () => {
 		try {
-			const lista = await productos.getProducts();
+			const lista = await Producto.find();
+			if(!lista.length) throw Error()
 			io.emit('update', { existe: true, lista: lista });
 		} catch (err) {
 			io.emit('update', { existe: false, lista: lista });
@@ -46,7 +48,7 @@ io.on('connection', (socket) => {
 	(async () => {})();
 	socket.on('getChatMessages', async () => {
 		try {
-      const messages = await Mensaje.find();
+			const messages = await Mensaje.find();
 			if (!messages.length) throw new Error('ENOENT');
 			io.emit('messages', messages);
 		} catch (err) {
@@ -63,7 +65,7 @@ io.on('connection', (socket) => {
 				...message,
 				date: new Date().toLocaleString('es-AR')
 			};
-      const newMessage = new Mensaje(messageWithDate);
+			const newMessage = new Mensaje(messageWithDate);
 			await newMessage.save();
 			messages.push(messageWithDate);
 			io.emit('messages', messages);

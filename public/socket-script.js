@@ -68,21 +68,21 @@ document.getElementById("chat-form").addEventListener("submit", (event) => {
   const { email, message } = event.target;
   const chatMessage = {
     email: email.value,
-    text: message.value,
+    message: message.value,
   };
   socket.emit("setNewChatMessages", chatMessage);
 });
 socket.emit("getChatMessages");
-socket.on("messages", (messages) => {
-  const html = messages
+socket.on("messages", (chatData) => {
+  const html = chatData
     .map(
-      (message) => `
+      (data) => `
         <div class="row">
             <div class="col">
                 <p class="text-success fst-normal">
-                    <span class="text-primary fw-bold">${message.email}</span>
-                    <small class="fw-normal" style="color: #652A0E;">[${message.date}]</small>
-                    : ${message.text}
+                    <span class="text-primary fw-bold">${data.email}</span>
+                    <small class="fw-normal" style="color: #652A0E;">[${data.date}]</small>
+                    : ${data.message}
                 </p>
             </div>
         </div>

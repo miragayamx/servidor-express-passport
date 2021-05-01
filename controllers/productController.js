@@ -35,14 +35,14 @@ const createProduct = async (req, res) => {
 //PUT
 const updateProduct = async (req, res) => {
 	try {
+		const producto = await Producto.findById(req.params.id);
 		if (!!req.file) {
 			req.body.thumbnail = '/uploads/' + req.file.filename;
-			let producto = await Producto.findById(req.params.id);
 			await deleteFile(`./public/${producto.thumbnail}`);
 		}
-		producto = { ...producto, ...req.body };
-		await producto.save();
-		res.status(200).json(producto);
+		await Producto.findByIdAndUpdate(req.params.id, req.body);
+		const updatedProduct = await Producto.findById(req.params.id);
+		res.status(200).json(updatedProduct);
 	} catch (err) {
 		res.status(400).json({ error: err.message });
 	}
