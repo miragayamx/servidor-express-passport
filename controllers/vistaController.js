@@ -25,7 +25,7 @@ const productosRegistrar = async (req, res) => {
 
 const productosVistaTest = (req, res) => {
 	try {
-		const cantidad = Number(req.query.cant) || 10;
+		const cantidad = Number(req.query.cant) === 0 ? 0 : Number(req.query.cant) || 10;
 		const lista = [];
 		for (let i = 0; i < cantidad; i++) {
 			const fakeProduct = {
