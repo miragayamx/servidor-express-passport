@@ -3,15 +3,25 @@ const express = require('express');
 const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
+const session = require('express-session');
 const handlebars = require('express-handlebars');
 const productRouter = require('./routes/productRouter');
 const vistaRouter = require('./routes/vistaRouter');
+const userRouter = require('./routes/userRouter');
 const Producto = require('./models/producto');
 const Mensaje = require('./models/mensaje');
 const { createUploadsFolder, createDBLiteFolder, readFile, saveFile, appendFile } = require('./utils/fileManager');
 require('./db/mongoose');
 
 const PORT = process.env.PORT || 8080;
+
+app.use(
+	session({
+		secret: 'secreto',
+		resave: true,
+		saveUninitialized: true
+	})
+);
 
 app.engine(
 	'hbs',
@@ -29,8 +39,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '/public')));
 
-app.use('/productos', vistaRouter);
+app.use('api', userRouter);
 app.use('/api', productRouter);
+app.use('/productos', vistaRouter);
 
 //SOCKET
 io.on('connection', (socket) => {
@@ -38,7 +49,7 @@ io.on('connection', (socket) => {
 	socket.on('getUpdate', async () => {
 		try {
 			const lista = await Producto.find();
-			if(!lista.length) throw Error()
+			if (!lista.length) throw Error();
 			io.emit('update', { existe: true, lista: lista });
 		} catch (err) {
 			io.emit('update', { existe: false, lista: lista });
