@@ -1,14 +1,14 @@
-# TEST VIEW
+# LOG-IN POR FORMULARIO
 
 >> Consigna:
 
-1. Sobre el desafío entregable de la clase número 20, crear una ruta 'productos/vista-test'
-que permita mostrar productos generados al azar en forma de tabla (similar a lo realizado
-sobre la ruta 'productos/vista').
-2. Los productos se generarán utilizando Faker.js como generador de información aleatoria de
-test (en lugar de tomarse desde la base de datos). Elegir apropiadamente los temas para
-conformar el objeto ‘producto’: nombre, precio y foto.
-3. Considerar pasar por query params la cantidad de productos a generar:
-Ej. 'productos/vista-test?cant=5'. De no pasar ningún valor, producirá 10 objetos.
-4. Verificar la generación de productos aleatorios utilizando distintas cantidades. Comprobar
-que para cantidad 0 indique que no hay productos.
+Continuando con el desafío de la clase anterior, vamos a incorporar un mecanismo sencillo que
+permita loguear un cliente por su nombre, mediante un formulario de ingreso.
+Luego de que el usuario esté logueado, se mostrará sobre el contenido del sitio un cartel con el
+mensaje “Bienvenido” y el nombre de usuario. Este cartel tendrá un botón de deslogueo a su
+derecha.
+Verificar que el cliente permanezca logueado en los reinicios de la página, mientras no expire el
+tiempo de inactividad de un minuto, que se recargará con cada request. En caso de alcanzarse ese
+tiempo, el próximo request de usuario nos llevará al formulario de login.
+Al desloguearse, se mostrará una vista con el mensaje de 'Hasta luego' más el nombre y se
+retornará automáticamente, luego de dos segundos, a la vista de login de usuario.
