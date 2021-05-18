@@ -8,6 +8,14 @@ const login = async (req, res) => {
 	}
 };
 
+const logout = (req, res) => {
+	try {
+		res.status(200).render('logout', {user: userOut});
+	} catch (err) {
+		res.status(404).json({ error: err.message });
+	}
+}
+
 const setCurrentUser = async (req, res) => {
 	try {
 		const currentUser = req.body.user;
@@ -19,9 +27,9 @@ const setCurrentUser = async (req, res) => {
 	}
 };
 
-const removeCurrentUser = async (req, res) => {
+const removeCurrentUser = (req, res) => {
 	try {
-		req.destroy((err) => {
+		req.session.destroy((err) => {
 			if (!!err) throw new Error('No se pudo cerrar la sesión');
 		});
 		res.redirect('/logout');
