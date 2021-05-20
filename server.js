@@ -33,7 +33,7 @@ app.use(
     resave: true,
     saveUninitialized: true,
     rolling: true,
-    cookie: { maxAge: 60000 },
+    cookie: { maxAge: 100000 },
   })
 );
 
