@@ -37,9 +37,14 @@
         id="product-form">
         <div class="form-group mb-3">
             <label for="user">Ingrese su nombre</label>
-            <input class="form-control" id="user" type="text" name="user" required="true" />
+            <input class="form-control" id="username" type="text" name="username" required="true" />
+        </div>
+        <div class="form-group mb-3">
+            <label for="user">Ingrese su contraseña</label>
+            <input class="form-control" id="password" type="text" name="password" required="true" />
         </div>
         <button type="submit" class="btn btn-primary mb-3">Enviar</button>
     </form>
+    <button type="button" class="btn btn-primary mb-3" onclick="location.href='/signup'">Registrar</button>
     {{/if}}
 </div>

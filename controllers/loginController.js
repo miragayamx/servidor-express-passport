@@ -4,37 +4,51 @@ const login = async (req, res) => {
 	try {
 		const lista = await Producto.find().lean();
 		if (!lista.length) throw Error();
-		res.render('login', { user: req.session.user, lista: lista, existe: true });
+		res.render('login', { user: req.user ? req.user.username : null, lista: lista, existe: true });
 	} catch (err) {
-		res.render('login', { user: req.session.user, lista: [], existe: false });
+		res.render('login', { user: req.user ? req.user.username : null, lista: [], existe: false });
 	}
 };
 
 const logout = (req, res) => {
 	try {
-		const userName = req.session.user;
-		req.session.destroy((err) => {
-			if (!!err) throw new Error('No se pudo cerrar la sesión');
-		});
+		const userName = req.user ? req.user.username : null;
+		if (!userName) return res.redirect('/login');
+		req.logout();
 		res.status(200).render('logout', { user: userName });
 	} catch (err) {
 		res.status(404).json({ error: err.message });
 	}
 };
 
-const setCurrentUser = async (req, res) => {
+const postLogin = async (req, res) => {
 	try {
-		const currentUser = req.body.user;
-		if (!currentUser) throw new Error('El inicio de sesión falló');
-		req.session.user = currentUser;
 		res.redirect('/login');
 	} catch (err) {
 		res.status(404).json({ error: err.message });
 	}
 };
 
+const failLogin = (req, res) => {
+	res.render('fail', { message: 'USER ERROR LOGIN', url: '/login' });
+};
+
+const signUp = (req, res) => {
+	res.render('signup');
+};
+
+const registerUser = (req, res) => res.redirect('/login');
+
+const failSingUp = (req, res) => {
+	res.render('fail', { message: 'USER ERROR SIGNUP', url: '/signup' });
+};
+
 module.exports = {
 	login,
-	setCurrentUser,
-	logout
+	postLogin,
+	logout,
+	failLogin,
+	signUp,
+	registerUser,
+	failSingUp
 };

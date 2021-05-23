@@ -1,17 +1,15 @@
-# PERSISTIR DATOS DE SESSION EN MONGO ATLAS
+# INICIO DE SESIÓN CON PASSPORT-LOCAL Y MONGO
 
 >> Consigna:
 
-Siguiendo nuestro sobre el entregable de la clase anterior, vamos a persistir las sesiones de
-usuario en Mongo Atlas.
+Implementar passport con estrategia local sobre el entregable que venimos
+realizando, creando un sistema de registro y login de usuario, ambos con username
+y password, persistiendo los datos sobre mongoDB. Podemos utilizar bcrypt como
+opción de encriptación de contraseñas guardadas en la base.
 
-● Verificar que en los reinicios del servidor, no se pierdan las sesiones activas de los clientes.
+Una vez logueado, se activará un espacio de sesión controlado por la sesión de
+passport. Esta estará activa por 10 minutos y en cada acceso se recargará este
+tiempo.
 
-● Mediante el cliente web de Mongo Atlas, revisar los id de sesión correspondientes a cada
-cliente y sus datos.
-
-● Borrar una sesión de cliente en la base y comprobar que en el próximo request al usuario se le
-presente la vista de login.
-
-● Fijar un tiempo de expiración de sesión de 10 minutos recargable con cada visita del cliente al
-sitio y verificar que si pasa ese tiempo de inactividad el cliente quede deslogueado.
+Implementar vistas de error para login (credenciales no válidas) y registro (usuario ya
+registrado).
