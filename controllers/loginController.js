@@ -21,14 +21,6 @@ const logout = (req, res) => {
 	}
 };
 
-const postLogin = async (req, res) => {
-	try {
-		res.redirect('/login');
-	} catch (err) {
-		res.status(404).json({ error: err.message });
-	}
-};
-
 const failLogin = (req, res) => {
 	res.render('fail', { message: 'USER ERROR LOGIN', url: '/login' });
 };
@@ -37,18 +29,14 @@ const signUp = (req, res) => {
 	res.render('signup');
 };
 
-const registerUser = (req, res) => res.redirect('/login');
-
 const failSingUp = (req, res) => {
 	res.render('fail', { message: 'USER ERROR SIGNUP', url: '/signup' });
 };
 
 module.exports = {
 	login,
-	postLogin,
 	logout,
 	failLogin,
 	signUp,
-	registerUser,
 	failSingUp
 };
